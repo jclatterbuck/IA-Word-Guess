@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IA Word Guess</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            background-color: #f4f4f4;
+            color: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        #game-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            font-size: 3rem;
+            margin: 0;
+            padding: 20px;
+        }
+        #message-area {
+            height: 30px;
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        #game-board {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            grid-gap: 5px;
+            margin-bottom: 30px;
+        }
+        .tile {
+            width: 60px;
+            height: 60px;
+            border: 2px solid #d3d6da;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        #keyboard {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .key-row {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 8px;
+            width: 100%;
+        }
+        .key {
+            font-family: inherit;
+            font-weight: bold;
+            border: 0;
+            padding: 0;
+            margin: 0 3px;
+            height: 58px;
+            width: 43px;
+            border-radius: 4px;
+            cursor: pointer;
+            background-color: #d3d6da;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-transform: uppercase;
+            font-size: 1rem;
+        }
+        .key.wide {
+            width: 68px;
+        }
+        .correct {
+            background-color: #6aaa64 !important;
+            border-color: #6aaa64 !important;
+            color: white;
+        }
+        .present {
+            background-color: #c9b458 !important;
+            border-color: #c9b458 !important;
+            color: white;
+        }
+        .absent {
+            background-color: #787c7e !important;
+            color: white;
+        }
+        #replay-container {
+            display: none; /* Hidden by default */
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+        }
+        #new-word-input {
+            font-size: 1rem;
+            padding: 10px;
+            width: 200px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            text-align: center;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        #replay-button {
+            font-size: 1rem;
+            font-weight: bold;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            background-color: #6aaa64;
+            color: white;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <h1>IA Word Guess</h1>
+        <div id="message-area"></div>
+        <div id="game-board"></div>
+        <div id="keyboard"></div>
+        <div id="replay-container">
+            <input type="text" id="new-word-input" placeholder="Enter new 5-letter word" maxlength="5">
+            <button id="replay-button">Play Again</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const board = document.getElementById('game-board');
+            const keyboardContainer = document.getElementById('keyboard');
+            const messageArea = document.getElementById('message-area');
+            const replayContainer = document.getElementById('replay-container');
+            const replayButton = document.getElementById('replay-button');
+            const newWordInput = document.getElementById('new-word-input');
+
+            let secretWord = "AUDIT";
+            const rows = 6;
+            const cols = 5;
+            let currentRow = 0;
+            let currentCol = 0;
+            let isGameOver = false;
+            let grid = [];
+            let keyState = {};
+
+            const keys = [
+                ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'],
+                ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'],
+                ['enter', 'z', 'x', 'c', 'v', 'b', 'n', 'm', 'backspace']
+            ];
+
+            function createBoard() {
+                board.innerHTML = ''; // Clear previous board
+                for (let r = 0; r < rows; r++) {
+                    for (let c = 0; c < cols; c++) {
+                        const tile = document.createElement('div');
+                        tile.classList.add('tile');
+                        tile.id = `tile-${r}-${c}`;
+                        board.appendChild(tile);
+                    }
+                }
+            }
+
+            function createKeyboard() {
+                keyboardContainer.innerHTML = ''; // Clear previous keyboard
+                keys.forEach(row => {
+                    const rowDiv = document.createElement('div');
+                    rowDiv.classList.add('key-row');
+                    row.forEach(key => {
+                        const keyButton = document.createElement('button');
+                        keyButton.classList.add('key');
+                        keyButton.setAttribute('data-key', key);
+                        
+                        if (key === 'backspace') {
+                            keyButton.innerHTML = '&#9003;';
+                            keyButton.classList.add('wide');
+                        } else {
+                            keyButton.textContent = key;
+                            if (key === 'enter') {
+                                keyButton.classList.add('wide');
+                            }
+                        }
+                        rowDiv.appendChild(keyButton);
+                    });
+                    keyboardContainer.appendChild(rowDiv);
+                });
+            }
+
+            function initializeGame() {
+                grid = Array(rows).fill(null).map(() => Array(cols).fill(''));
+                keyState = {};
+                currentRow = 0;
+                currentCol = 0;
+                isGameOver = false;
+
+                createBoard();
+                if (keyboardContainer.children.length === 0) {
+                    createKeyboard();
+                } else {
+                    // Reset key colors
+                    document.querySelectorAll('.key').forEach(key => {
+                        key.classList.remove('correct', 'present', 'absent');
+                    });
+                }
+                
+                messageArea.textContent = '';
+                board.style.display = 'grid';
+                keyboardContainer.style.display = 'flex';
+                replayContainer.style.display = 'none';
+            }
+
+            function handleGameOver() {
+                isGameOver = true;
+                board.style.display = 'none';
+                keyboardContainer.style.display = 'none';
+                replayContainer.style.display = 'flex';
+                newWordInput.value = '';
+                newWordInput.focus();
+            }
+
+            function handleKeyPress(key) {
+                if (isGameOver) return;
+                if (key === 'enter') submitGuess();
+                else if (key === 'backspace') deleteLetter();
+                else if (/^[a-z]$/.test(key)) addLetter(key);
+            }
+
+            function addLetter(letter) {
+                if (currentCol < cols) {
+                    grid[currentRow][currentCol] = letter;
+                    document.getElementById(`tile-${currentRow}-${currentCol}`).textContent = letter;
+                    currentCol++;
+                }
+            }
+
+            function deleteLetter() {
+                if (currentCol > 0) {
+                    currentCol--;
+                    grid[currentRow][currentCol] = '';
+                    document.getElementById(`tile-${currentRow}-${currentCol}`).textContent = '';
+                }
+            }
+
+            function submitGuess() {
+                if (currentCol < cols) {
+                    showMessage("Not enough letters", 1000);
+                    return;
+                }
+                const guess = grid[currentRow].join('').toUpperCase();
+                evaluateGuess(guess, currentRow);
+
+                if (guess === secretWord) {
+                    showMessage("You win!");
+                    setTimeout(handleGameOver, 1500);
+                } else {
+                    currentRow++;
+                    currentCol = 0;
+                    if (currentRow >= rows) {
+                        showMessage(`Game Over! The word was ${secretWord}`);
+                        setTimeout(handleGameOver, 1500);
+                    }
+                }
+            }
+            
+            function evaluateGuess(guess, row) {
+                const secret = secretWord.split('');
+                const guessLetters = guess.split('');
+                const tempSecret = [...secret];
+                const feedback = Array(cols).fill(null);
+
+                // Pass 1: Correct letters
+                for (let i = 0; i < cols; i++) {
+                    if (guessLetters[i] === tempSecret[i]) {
+                        feedback[i] = 'correct';
+                        updateKeyState(guessLetters[i], 'correct');
+                        tempSecret[i] = null;
+                    }
+                }
+
+                // Pass 2: Present letters
+                for (let i = 0; i < cols; i++) {
+                    if (feedback[i] === null && tempSecret.includes(guessLetters[i])) {
+                        feedback[i] = 'present';
+                        updateKeyState(guessLetters[i], 'present');
+                        tempSecret[tempSecret.indexOf(guessLetters[i])] = null;
+                    } else if (feedback[i] === null) {
+                        feedback[i] = 'absent';
+                        updateKeyState(guessLetters[i], 'absent');
+                    }
+                }
+
+                for (let i = 0; i < cols; i++) {
+                    document.getElementById(`tile-${row}-${i}`).classList.add(feedback[i]);
+                }
+                updateKeyboard();
+            }
+
+            function updateKeyState(key, state) {
+                const upperKey = key.toUpperCase();
+                const priority = { 'correct': 3, 'present': 2, 'absent': 1 };
+                if (!keyState[upperKey] || priority[state] > priority[keyState[upperKey]]) {
+                    keyState[upperKey] = state;
+                }
+            }
+
+            function updateKeyboard() {
+                for (const key in keyState) {
+                    const keyButton = document.querySelector(`[data-key="${key.toLowerCase()}"]`);
+                    if (keyButton) keyButton.classList.add(keyState[key]);
+                }
+            }
+            
+            function showMessage(msg, duration) {
+                messageArea.textContent = msg;
+                if (duration) {
+                    setTimeout(() => { if (messageArea.textContent === msg) messageArea.textContent = ''; }, duration);
+                }
+            }
+
+            // --- Event Listeners ---
+            document.addEventListener('keydown', (e) => handleKeyPress(e.key.toLowerCase()));
+            keyboardContainer.addEventListener('click', (e) => {
+                if (e.target.tagName === 'BUTTON') handleKeyPress(e.target.getAttribute('data-key'));
+            });
+            replayButton.addEventListener('click', () => {
+                const newWord = newWordInput.value.trim().toUpperCase();
+                if (newWord.length === 5 && /^[A-Z]+$/.test(newWord)) {
+                    secretWord = newWord;
+                    initializeGame();
+                } else {
+                    alert("Please enter a valid 5-letter word.");
+                }
+            });
+
+            // --- Initial Game Start ---
+            initializeGame();
+        });
+    </script>
+</body>
+</html>
