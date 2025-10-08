@@ -21,11 +21,16 @@
             align-items: center;
             height: 100vh;
             margin: 0;
+            flex-direction: column; /* Allow content to stack vertically */
         }
         #game-container {
             display: flex;
             flex-direction: column;
             align-items: center;
+            padding: 20px; /* Add some padding around the game */
+            border-radius: 10px;
+            background-color: #2a2a2a; /* Slightly lighter background for the game area */
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5); /* Subtle shadow */
         }
         h1 {
             /* Using the special Halloween font */
@@ -33,14 +38,16 @@
             font-size: 4rem;
             color: #d97d00; /* Pumpkin Orange */
             margin: 0;
-            padding: 20px;
+            padding: 20px 0 10px 0;
             letter-spacing: 3px;
+            text-shadow: 2px 2px 5px rgba(0,0,0,0.7); /* Spooky text shadow */
         }
         #message-area {
             height: 30px;
             margin-bottom: 20px;
             font-size: 1.2rem;
             font-weight: bold;
+            color: #f8f8f8;
         }
         #game-board {
             display: grid;
@@ -58,6 +65,7 @@
             font-size: 2rem;
             font-weight: bold;
             text-transform: uppercase;
+            color: #f8f8f8; /* Default tile text color */
         }
         #keyboard {
             display: flex;
@@ -91,7 +99,7 @@
         .key.wide {
             width: 68px;
         }
-        /* New Themed Colors */
+        /* Themed Colors */
         .correct {
             background-color: #d97d00 !important; /* Pumpkin Orange */
             border-color: #d97d00 !important;
@@ -133,11 +141,78 @@
             color: white;
             cursor: pointer;
         }
+
+        /* Instructions Styling */
+        #instructions {
+            width: 80%;
+            max-width: 600px;
+            margin-bottom: 20px;
+            background-color: #3a3a3c; /* Dark gray background for instructions */
+            border-radius: 8px;
+            padding: 15px;
+            color: #f8f8f8;
+            text-align: left;
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+        #instructions summary {
+            font-weight: bold;
+            cursor: pointer;
+            list-style: none; /* Remove default marker */
+            position: relative;
+            padding-left: 20px;
+        }
+        #instructions summary::-webkit-details-marker {
+            display: none; /* Remove default marker for Webkit browsers */
+        }
+        #instructions summary:before {
+            content: '▼'; /* Custom arrow icon */
+            position: absolute;
+            left: 0;
+            transition: transform 0.2s ease;
+        }
+        #instructions[open] summary:before {
+            content: '▲'; /* Up arrow when open */
+            transform: rotate(0deg);
+        }
+        #instructions ul {
+            padding-left: 25px;
+            margin-top: 10px;
+        }
+        #instructions li {
+            margin-bottom: 5px;
+        }
+        #instructions .color-box {
+            display: inline-block;
+            width: 15px;
+            height: 15px;
+            border-radius: 3px;
+            vertical-align: middle;
+            margin-right: 5px;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
     </style>
 </head>
 <body>
     <div id="game-container">
         <h1>IA Word Guess</h1>
+
+        <details id="instructions">
+            <summary>How to Play (Click to Expand)</summary>
+            <ul>
+                <li>Guess the 5-letter secret word in 6 tries.</li>
+                <li>Each guess must be a valid 5-letter word. Press Enter to submit.</li>
+                <li>After each guess, the tiles and keyboard keys will change color to show how close your guess was:</li>
+                <ul>
+                    <li><span class="color-box" style="background-color: #d97d00;"></span> **Pumpkin Orange:** Letter is in the word and in the correct spot.</li>
+                    <li><span class="color-box" style="background-color: #8c51a0;"></span> **Spooky Purple:** Letter is in the word but in the wrong spot.</li>
+                    <li><span class="color-box" style="background-color: #3a3a3c;"></span> **Dark Gray:** Letter is not in the word at all.</li>
+                </ul>
+                <li>Use your physical keyboard or click the on-screen keys.</li>
+                <li>**Moderator Note:** After a game ends, the host can enter a new 5-letter word below and click "Play Again."</li>
+            </ul>
+        </details>
+
         <div id="message-area"></div>
         <div id="game-board"></div>
         <div id="keyboard"></div>
