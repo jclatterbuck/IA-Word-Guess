@@ -12,35 +12,39 @@
     
     <style>
         body {
-            /* Using a generic spooky font for the body */
             font-family: 'Courier New', Courier, monospace;
-            background-color: #121213; /* Dark background */
-            color: #f8f8f8; /* Light text */
+            color: #f8f8f8;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
-            flex-direction: column; /* Allow content to stack vertically */
+            
+            /* --- Spooky Background Image --- */
+            background-color: #121213; /* Fallback color */
+            background-image: url('data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxISEBUSEhIVFRUVFRUVFRUVFRUVFRUVFRUWFhUVFRUYHSggGBolHRUVITEhJSkrLi4uFx8zODMtNygtLisBCgoKDg0OFxAQGi0fHSUtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLf/AABEIAKgBLAMBIgACEQEDEQH/xAAaAAEBAQEBAQEAAAAAAAAAAAAAAQIDBAUG/8QAMRABAAICAQIBBQcFAQEAAAAAAAECEQMSITFBUQQFYXGBkaGx0RMiseFCUvAVI+Hx/8QAGQEBAQEBAQEAAAAAAAAAAAAAAAECAwQF/8QAIREBAQEAAgMAAwEBAQAAAAAAAAECEQMhEjFBUQQiYRP/2gAMAwEAAhEDEQA/AP0sAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAw5ckY6yk/d3+gGDLDLGOWMs/WPrqZQAQ1AAAAgAgCoioAKACCoKgCoioAKAAAAAgqAAAAAEAAABUAAAAAioAKAgqAoCAqAoCAoCAoCAoAIKgKAgqAoCAqAKAgqAoCAqAKAgqAKAIKgKAgqAoCAoCAqAKAgqAAACoAAAAAAABg5OWOP5pZ/LHX6gZQAQAAAAAAAAAAAAAAAAAAAAAQVAABAAAAAEAFQFAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACoAAAAAAAQABg5cuOPHnln8v4QMwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAUEAUEAFEAFEFEFwFAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACCoAAAAAAAAAAAABi5+Tlj8azP8AhjP6gZgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAuAuAuAC4C4C4C4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGLmyxjjOWelYyz+gGUAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFQFAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADFzcV+Gcc8dcZ/f0AyAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//Z');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
         }
         #game-container {
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 20px; /* Add some padding around the game */
+            padding: 20px;
             border-radius: 10px;
-            background-color: #2a2a2a; /* Slightly lighter background for the game area */
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5); /* Subtle shadow */
+            /* Semi-transparent background to help readability */
+            background-color: rgba(42, 42, 42, 0.85); 
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
         }
         h1 {
-            /* Using the special Halloween font */
             font-family: 'Creepster', cursive;
             font-size: 4rem;
-            color: #d97d00; /* Pumpkin Orange */
+            color: #d97d00;
             margin: 0;
             padding: 20px 0 10px 0;
             letter-spacing: 3px;
-            text-shadow: 2px 2px 5px rgba(0,0,0,0.7); /* Spooky text shadow */
+            text-shadow: 2px 2px 5px rgba(0,0,0,0.7);
         }
         #message-area {
             height: 30px;
@@ -58,14 +62,14 @@
         .tile {
             width: 60px;
             height: 60px;
-            border: 2px solid #3a3a3c; /* Darker border for tiles */
+            border: 2px solid #3a3a3c;
             display: flex;
             justify-content: center;
             align-items: center;
             font-size: 2rem;
             font-weight: bold;
             text-transform: uppercase;
-            color: #f8f8f8; /* Default tile text color */
+            color: #f8f8f8;
         }
         #keyboard {
             display: flex;
@@ -88,7 +92,7 @@
             width: 43px;
             border-radius: 4px;
             cursor: pointer;
-            background-color: #818384; /* Gray keys */
+            background-color: #818384;
             color: #f8f8f8;
             display: flex;
             justify-content: center;
@@ -101,17 +105,17 @@
         }
         /* Themed Colors */
         .correct {
-            background-color: #d97d00 !important; /* Pumpkin Orange */
+            background-color: #d97d00 !important;
             border-color: #d97d00 !important;
             color: white;
         }
         .present {
-            background-color: #8c51a0 !important; /* Spooky Purple */
+            background-color: #8c51a0 !important;
             border-color: #8c51a0 !important;
             color: white;
         }
         .absent {
-            background-color: #3a3a3c !important; /* Dark Gray */
+            background-color: #3a3a3c !important;
             color: #f8f8f8;
         }
         #replay-container {
@@ -144,10 +148,10 @@
 
         /* Instructions Styling */
         #instructions {
-            width: 80%;
+            width: 90%;
             max-width: 600px;
             margin-bottom: 20px;
-            background-color: #3a3a3c; /* Dark gray background for instructions */
+            background-color: #3a3a3c;
             border-radius: 8px;
             padding: 15px;
             color: #f8f8f8;
@@ -158,22 +162,21 @@
         #instructions summary {
             font-weight: bold;
             cursor: pointer;
-            list-style: none; /* Remove default marker */
+            list-style: none;
             position: relative;
             padding-left: 20px;
         }
         #instructions summary::-webkit-details-marker {
-            display: none; /* Remove default marker for Webkit browsers */
+            display: none;
         }
         #instructions summary:before {
-            content: '▼'; /* Custom arrow icon */
+            content: '▼';
             position: absolute;
             left: 0;
             transition: transform 0.2s ease;
         }
         #instructions[open] summary:before {
-            content: '▲'; /* Up arrow when open */
-            transform: rotate(0deg);
+            content: '▲';
         }
         #instructions ul {
             padding-left: 25px;
@@ -208,225 +211,4 @@
                     <li><span class="color-box" style="background-color: #8c51a0;"></span> **Spooky Purple:** Letter is in the word but in the wrong spot.</li>
                     <li><span class="color-box" style="background-color: #3a3a3c;"></span> **Dark Gray:** Letter is not in the word at all.</li>
                 </ul>
-                <li>Use your physical keyboard or click the on-screen keys.</li>
-                <li>**Moderator Note:** After a game ends, the host can enter a new 5-letter word below and click "Play Again."</li>
-            </ul>
-        </details>
-
-        <div id="message-area"></div>
-        <div id="game-board"></div>
-        <div id="keyboard"></div>
-        <div id="replay-container">
-            <input type="password" id="new-word-input" placeholder="Enter new 5-letter word" maxlength="5">
-            <button id="replay-button">Play Again</button>
-        </div>
-    </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const board = document.getElementById('game-board');
-            const keyboardContainer = document.getElementById('keyboard');
-            const messageArea = document.getElementById('message-area');
-            const replayContainer = document.getElementById('replay-container');
-            const replayButton = document.getElementById('replay-button');
-            const newWordInput = document.getElementById('new-word-input');
-
-            let secretWord = "GHOST"; // Themed starting word!
-            const rows = 6;
-            const cols = 5;
-            let currentRow = 0;
-            let currentCol = 0;
-            let isGameOver = false;
-            let grid = [];
-            let keyState = {};
-
-            const keys = [
-                ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'],
-                ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'],
-                ['enter', 'z', 'x', 'c', 'v', 'b', 'n', 'm', 'backspace']
-            ];
-
-            function createBoard() {
-                board.innerHTML = '';
-                for (let r = 0; r < rows; r++) {
-                    for (let c = 0; c < cols; c++) {
-                        const tile = document.createElement('div');
-                        tile.classList.add('tile');
-                        tile.id = `tile-${r}-${c}`;
-                        board.appendChild(tile);
-                    }
-                }
-            }
-
-            function createKeyboard() {
-                keyboardContainer.innerHTML = '';
-                keys.forEach(row => {
-                    const rowDiv = document.createElement('div');
-                    rowDiv.classList.add('key-row');
-                    row.forEach(key => {
-                        const keyButton = document.createElement('button');
-                        keyButton.classList.add('key');
-                        keyButton.setAttribute('data-key', key);
-                        
-                        if (key === 'backspace') {
-                            keyButton.innerHTML = '👻'; // Ghost Icon!
-                            keyButton.classList.add('wide');
-                        } else {
-                            keyButton.textContent = key;
-                            if (key === 'enter') {
-                                keyButton.classList.add('wide');
-                            }
-                        }
-                        rowDiv.appendChild(keyButton);
-                    });
-                    keyboardContainer.appendChild(rowDiv);
-                });
-            }
-
-            function initializeGame() {
-                grid = Array(rows).fill(null).map(() => Array(cols).fill(''));
-                keyState = {};
-                currentRow = 0;
-                currentCol = 0;
-                isGameOver = false;
-
-                createBoard();
-                if (keyboardContainer.children.length === 0) {
-                    createKeyboard();
-                } else {
-                    document.querySelectorAll('.key').forEach(key => {
-                        key.classList.remove('correct', 'present', 'absent');
-                    });
-                }
-                
-                messageArea.textContent = '';
-                board.style.display = 'grid';
-                keyboardContainer.style.display = 'flex';
-                replayContainer.style.display = 'none';
-            }
-
-            function handleGameOver() {
-                isGameOver = true;
-                board.style.display = 'none';
-                keyboardContainer.style.display = 'none';
-                replayContainer.style.display = 'flex';
-                newWordInput.value = '';
-                newWordInput.focus();
-            }
-
-            function handleKeyPress(key) {
-                if (isGameOver) return;
-                if (key === 'enter') submitGuess();
-                else if (key === 'backspace') deleteLetter();
-                else if (/^[a-z]$/.test(key)) addLetter(key);
-            }
-
-            function addLetter(letter) {
-                if (currentCol < cols) {
-                    grid[currentRow][currentCol] = letter;
-                    document.getElementById(`tile-${currentRow}-${currentCol}`).textContent = letter;
-                    currentCol++;
-                }
-            }
-
-            function deleteLetter() {
-                if (currentCol > 0) {
-                    currentCol--;
-                    grid[currentRow][currentCol] = '';
-                    document.getElementById(`tile-${currentRow}-${currentCol}`).textContent = '';
-                }
-            }
-
-            function submitGuess() {
-                if (currentCol < cols) {
-                    showMessage("Not enough letters", 1000);
-                    return;
-                }
-                const guess = grid[currentRow].join('').toUpperCase();
-                evaluateGuess(guess, currentRow);
-
-                if (guess === secretWord) {
-                    showMessage("You win!");
-                    setTimeout(handleGameOver, 1500);
-                } else {
-                    currentRow++;
-                    currentCol = 0;
-                    if (currentRow >= rows) {
-                        showMessage(`Game Over! The word was ${secretWord}`);
-                        setTimeout(handleGameOver, 1500);
-                    }
-                }
-            }
-            
-            function evaluateGuess(guess, row) {
-                const secret = secretWord.split('');
-                const guessLetters = guess.split('');
-                const tempSecret = [...secret];
-                const feedback = Array(cols).fill(null);
-
-                for (let i = 0; i < cols; i++) {
-                    if (guessLetters[i] === tempSecret[i]) {
-                        feedback[i] = 'correct';
-                        updateKeyState(guessLetters[i], 'correct');
-                        tempSecret[i] = null;
-                    }
-                }
-
-                for (let i = 0; i < cols; i++) {
-                    if (feedback[i] === null && tempSecret.includes(guessLetters[i])) {
-                        feedback[i] = 'present';
-                        updateKeyState(guessLetters[i], 'present');
-                        tempSecret[tempSecret.indexOf(guessLetters[i])] = null;
-                    } else if (feedback[i] === null) {
-                        feedback[i] = 'absent';
-                        updateKeyState(guessLetters[i], 'absent');
-                    }
-                }
-
-                for (let i = 0; i < cols; i++) {
-                    document.getElementById(`tile-${row}-${i}`).classList.add(feedback[i]);
-                }
-                updateKeyboard();
-            }
-
-            function updateKeyState(key, state) {
-                const upperKey = key.toUpperCase();
-                const priority = { 'correct': 3, 'present': 2, 'absent': 1 };
-                if (!keyState[upperKey] || priority[state] > priority[keyState[upperKey]]) {
-                    keyState[upperKey] = state;
-                }
-            }
-
-            function updateKeyboard() {
-                for (const key in keyState) {
-                    const keyButton = document.querySelector(`[data-key="${key.toLowerCase()}"]`);
-                    if (keyButton) keyButton.classList.add(keyState[key]);
-                }
-            }
-            
-            function showMessage(msg, duration) {
-                messageArea.textContent = msg;
-                if (duration) {
-                    setTimeout(() => { if (messageArea.textContent === msg) messageArea.textContent = ''; }, duration);
-                }
-            }
-
-            document.addEventListener('keydown', (e) => handleKeyPress(e.key.toLowerCase()));
-            keyboardContainer.addEventListener('click', (e) => {
-                if (e.target.tagName === 'BUTTON') handleKeyPress(e.target.getAttribute('data-key'));
-            });
-            replayButton.addEventListener('click', () => {
-                const newWord = newWordInput.value.trim().toUpperCase();
-                if (newWord.length === 5 && /^[A-Z]+$/.test(newWord)) {
-                    secretWord = newWord;
-                    initializeGame();
-                } else {
-                    alert("Please enter a valid 5-letter word.");
-                }
-            });
-
-            initializeGame();
-        });
-    </script>
-</body>
-</html>
+             
