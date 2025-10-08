@@ -3,12 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IA Word Guess</title>
+    <title>IA Word Guess - Halloween Edition</title>
+    
+    <!-- Import the Halloween font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Creepster&display=swap" rel="stylesheet">
+    
     <style>
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-            background-color: #f4f4f4;
-            color: #000;
+            /* Using a generic spooky font for the body */
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #121213; /* Dark background */
+            color: #f8f8f8; /* Light text */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -21,9 +28,13 @@
             align-items: center;
         }
         h1 {
-            font-size: 3rem;
+            /* Using the special Halloween font */
+            font-family: 'Creepster', cursive;
+            font-size: 4rem;
+            color: #d97d00; /* Pumpkin Orange */
             margin: 0;
             padding: 20px;
+            letter-spacing: 3px;
         }
         #message-area {
             height: 30px;
@@ -40,7 +51,7 @@
         .tile {
             width: 60px;
             height: 60px;
-            border: 2px solid #d3d6da;
+            border: 2px solid #3a3a3c; /* Darker border for tiles */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -69,7 +80,8 @@
             width: 43px;
             border-radius: 4px;
             cursor: pointer;
-            background-color: #d3d6da;
+            background-color: #818384; /* Gray keys */
+            color: #f8f8f8;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -79,22 +91,23 @@
         .key.wide {
             width: 68px;
         }
+        /* New Themed Colors */
         .correct {
-            background-color: #6aaa64 !important;
-            border-color: #6aaa64 !important;
+            background-color: #d97d00 !important; /* Pumpkin Orange */
+            border-color: #d97d00 !important;
             color: white;
         }
         .present {
-            background-color: #c9b458 !important;
-            border-color: #c9b458 !important;
+            background-color: #8c51a0 !important; /* Spooky Purple */
+            border-color: #8c51a0 !important;
             color: white;
         }
         .absent {
-            background-color: #787c7e !important;
-            color: white;
+            background-color: #3a3a3c !important; /* Dark Gray */
+            color: #f8f8f8;
         }
         #replay-container {
-            display: none; /* Hidden by default */
+            display: none;
             flex-direction: column;
             align-items: center;
             margin-top: 20px;
@@ -104,9 +117,10 @@
             padding: 10px;
             width: 200px;
             margin-bottom: 10px;
-            text-transform: uppercase;
             text-align: center;
-            border: 1px solid #ccc;
+            border: 1px solid #3a3a3c;
+            background-color: #121213;
+            color: #f8f8f8;
             border-radius: 4px;
         }
         #replay-button {
@@ -115,7 +129,7 @@
             padding: 10px 20px;
             border: none;
             border-radius: 4px;
-            background-color: #6aaa64;
+            background-color: #d97d00;
             color: white;
             cursor: pointer;
         }
@@ -128,7 +142,6 @@
         <div id="game-board"></div>
         <div id="keyboard"></div>
         <div id="replay-container">
-            <!-- This is the line I changed -->
             <input type="password" id="new-word-input" placeholder="Enter new 5-letter word" maxlength="5">
             <button id="replay-button">Play Again</button>
         </div>
@@ -143,7 +156,7 @@
             const replayButton = document.getElementById('replay-button');
             const newWordInput = document.getElementById('new-word-input');
 
-            let secretWord = "AUDIT";
+            let secretWord = "GHOST"; // Themed starting word!
             const rows = 6;
             const cols = 5;
             let currentRow = 0;
@@ -159,7 +172,7 @@
             ];
 
             function createBoard() {
-                board.innerHTML = ''; // Clear previous board
+                board.innerHTML = '';
                 for (let r = 0; r < rows; r++) {
                     for (let c = 0; c < cols; c++) {
                         const tile = document.createElement('div');
@@ -171,7 +184,7 @@
             }
 
             function createKeyboard() {
-                keyboardContainer.innerHTML = ''; // Clear previous keyboard
+                keyboardContainer.innerHTML = '';
                 keys.forEach(row => {
                     const rowDiv = document.createElement('div');
                     rowDiv.classList.add('key-row');
@@ -181,7 +194,7 @@
                         keyButton.setAttribute('data-key', key);
                         
                         if (key === 'backspace') {
-                            keyButton.innerHTML = '&#9003;';
+                            keyButton.innerHTML = '👻'; // Ghost Icon!
                             keyButton.classList.add('wide');
                         } else {
                             keyButton.textContent = key;
@@ -206,7 +219,6 @@
                 if (keyboardContainer.children.length === 0) {
                     createKeyboard();
                 } else {
-                    // Reset key colors
                     document.querySelectorAll('.key').forEach(key => {
                         key.classList.remove('correct', 'present', 'absent');
                     });
@@ -277,7 +289,6 @@
                 const tempSecret = [...secret];
                 const feedback = Array(cols).fill(null);
 
-                // Pass 1: Correct letters
                 for (let i = 0; i < cols; i++) {
                     if (guessLetters[i] === tempSecret[i]) {
                         feedback[i] = 'correct';
@@ -286,7 +297,6 @@
                     }
                 }
 
-                // Pass 2: Present letters
                 for (let i = 0; i < cols; i++) {
                     if (feedback[i] === null && tempSecret.includes(guessLetters[i])) {
                         feedback[i] = 'present';
@@ -326,7 +336,6 @@
                 }
             }
 
-            // --- Event Listeners ---
             document.addEventListener('keydown', (e) => handleKeyPress(e.key.toLowerCase()));
             keyboardContainer.addEventListener('click', (e) => {
                 if (e.target.tagName === 'BUTTON') handleKeyPress(e.target.getAttribute('data-key'));
@@ -341,7 +350,6 @@
                 }
             });
 
-            // --- Initial Game Start ---
             initializeGame();
         });
     </script>
