@@ -12,39 +12,35 @@
     
     <style>
         body {
+            /* Using a generic spooky font for the body */
             font-family: 'Courier New', Courier, monospace;
-            color: #f8f8f8;
+            background-color: #121213; /* Dark background */
+            color: #f8f8f8; /* Light text */
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
-            
-            /* --- Spooky Background Image --- */
-            background-color: #121213; /* Fallback color */
-            background-image: url('data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxISEBUSEhIVFRUVFRUVFRUVFRUVFRUVFRUWFhUVFRUYHSggGBolHRUVITEhJSkrLi4uFx8zODMtNygtLisBCgoKDg0OFxAQGi0fHSUtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLf/AABEIAKgBLAMBIgACEQEDEQH/xAAaAAEBAQEBAQEAAAAAAAAAAAAAAQIDBAUG/8QAMRABAAICAQIBBQcFAQEAAAAAAAECEQMSITFBUQQFYXGBkaGx0RMiseFCUvAVI+Hx/8QAGQEBAQEBAQEAAAAAAAAAAAAAAAECAwQF/8QAIREBAQEAAgMAAwEBAQAAAAAAAAECEQMhEjFBUQQiYRP/2gAMAwEAAhEDEQA/AP0sAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAw5ckY6yk/d3+gGDLDLGOWMs/WPrqZQAQ1AAAAgAgCoioAKACCoKgCoioAKAAAAAgqAAAAAEAAABUAAAAAioAKAgqAoCAqAoCAoCAoCAoAIKgKAgqAoCAqAKAgqAoCAqAKAgqAKAIKgKAgqAoCAoCAqAKAgqAAACoAAAAAAABg5OWOP5pZ/LHX6gZQAQAAAAAAAAAAAAAAAAAAAAAQVAABAAAAAEAFQFAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACoAAAAAAAQABg5cuOPHnln8v4QMwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAUEAUEAFEAFEFEFwFAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACCoAAAAAAAAAAAABi5+Tlj8azP8AhjP6gZgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAuAuAuAC4C4C4C4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGLmyxjjOWelYyz+gGUAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFQFAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADFzcV+Gcc8dcZ/f0AyAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//Z');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
+            flex-direction: column; /* Allow content to stack vertically */
         }
         #game-container {
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 20px;
+            padding: 20px; /* Add some padding around the game */
             border-radius: 10px;
-            /* Semi-transparent background to help readability */
-            background-color: rgba(42, 42, 42, 0.85); 
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
+            background-color: #2a2a2a; /* Slightly lighter background for the game area */
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5); /* Subtle shadow */
         }
         h1 {
+            /* Using the special Halloween font */
             font-family: 'Creepster', cursive;
             font-size: 4rem;
-            color: #d97d00;
+            color: #d97d00; /* Pumpkin Orange */
             margin: 0;
             padding: 20px 0 10px 0;
             letter-spacing: 3px;
-            text-shadow: 2px 2px 5px rgba(0,0,0,0.7);
+            text-shadow: 2px 2px 5px rgba(0,0,0,0.7); /* Spooky text shadow */
         }
         #message-area {
             height: 30px;
@@ -62,14 +58,14 @@
         .tile {
             width: 60px;
             height: 60px;
-            border: 2px solid #3a3a3c;
+            border: 2px solid #3a3a3c; /* Darker border for tiles */
             display: flex;
             justify-content: center;
             align-items: center;
             font-size: 2rem;
             font-weight: bold;
             text-transform: uppercase;
-            color: #f8f8f8;
+            color: #f8f8f8; /* Default tile text color */
         }
         #keyboard {
             display: flex;
@@ -92,7 +88,7 @@
             width: 43px;
             border-radius: 4px;
             cursor: pointer;
-            background-color: #818384;
+            background-color: #818384; /* Gray keys */
             color: #f8f8f8;
             display: flex;
             justify-content: center;
@@ -105,17 +101,17 @@
         }
         /* Themed Colors */
         .correct {
-            background-color: #d97d00 !important;
+            background-color: #d97d00 !important; /* Pumpkin Orange */
             border-color: #d97d00 !important;
             color: white;
         }
         .present {
-            background-color: #8c51a0 !important;
+            background-color: #8c51a0 !important; /* Spooky Purple */
             border-color: #8c51a0 !important;
             color: white;
         }
         .absent {
-            background-color: #3a3a3c !important;
+            background-color: #3a3a3c !important; /* Dark Gray */
             color: #f8f8f8;
         }
         #replay-container {
@@ -148,10 +144,10 @@
 
         /* Instructions Styling */
         #instructions {
-            width: 90%;
+            width: 80%;
             max-width: 600px;
             margin-bottom: 20px;
-            background-color: #3a3a3c;
+            background-color: #3a3a3c; /* Dark gray background for instructions */
             border-radius: 8px;
             padding: 15px;
             color: #f8f8f8;
@@ -162,21 +158,22 @@
         #instructions summary {
             font-weight: bold;
             cursor: pointer;
-            list-style: none;
+            list-style: none; /* Remove default marker */
             position: relative;
             padding-left: 20px;
         }
         #instructions summary::-webkit-details-marker {
-            display: none;
+            display: none; /* Remove default marker for Webkit browsers */
         }
         #instructions summary:before {
-            content: '▼';
+            content: '▼'; /* Custom arrow icon */
             position: absolute;
             left: 0;
             transition: transform 0.2s ease;
         }
         #instructions[open] summary:before {
-            content: '▲';
+            content: '▲'; /* Up arrow when open */
+            transform: rotate(0deg);
         }
         #instructions ul {
             padding-left: 25px;
